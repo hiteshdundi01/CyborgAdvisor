@@ -1,34 +1,85 @@
 # 🤖 Cyborg Advisor
 
-## Neurosymbolic Portfolio Rebalancer
-
 <div align="center">
 
-![Version](https://img.shields.io/badge/version-0.1.0-blue)
-![Python](https://img.shields.io/badge/python-3.10+-green)
-![LangGraph](https://img.shields.io/badge/LangGraph-0.2+-purple)
+### **The Neurosymbolic Rebalancer**
 
-**A cognitive architecture that separates fast intuition from slow deliberation**
+*A reference implementation of the "Deterministic AI Pivot" for Wealth Management*
 
-*LLMs handle intent. Python handles math. Humans stay in control.*
+[![Python](https://img.shields.io/badge/Python-3.10+-blue?logo=python)](https://python.org)
+[![LangGraph](https://img.shields.io/badge/LangGraph-Agentic_Workflows-purple)](https://langchain-ai.github.io/langgraph/)
+[![Streamlit](https://img.shields.io/badge/Streamlit-Web_UI-red?logo=streamlit)](https://streamlit.io)
+
+---
+
+**LLMs handle intent. Python handles math. Humans stay in control.**
+
+*Demonstrating the art of the possible for enterprise AI in finance.*
 
 </div>
 
 ---
 
-## 🧠 The "System 1 vs System 2" Architecture
+## 📖 Why This Exists: The Trust Wall
 
-Inspired by Daniel Kahneman's dual-process theory, this system separates:
+> *"The year 2026 stands as a definitive inflection point... The 'GenAI Bubble' of 2024-2025 has cooled, giving way to a more rigorous, disciplined operational reality."*
+> — **The Deterministic AI Pivot**
 
-| System 1 (Fast/Intuitive) | System 2 (Slow/Deliberate) |
-|---------------------------|----------------------------|
-| 🤖 LLM-powered | 🐍 Pure Python |
-| Intent classification | Financial calculations |
+### The Problem with "GenAI Chatbots" in Finance
+
+The initial wave of generative AI in wealth management focused on **conversational interfaces**—chatbots that could answer questions using LLMs. But these probabilistic systems hit what industry analysts call the **"Trust Wall"**:
+
+| ❌ The Problem | Why It Fails in Finance |
+|----------------|------------------------|
+| **Hallucinations** | LLMs fabricate numbers, tax rules, and regulations with confident language |
+| **Non-Determinism** | The same question yields different answers—unacceptable for audits |
+| **Black Box Opacity** | No explainable "chain of thought" for regulators (SEC, FCA mandates) |
+| **Zero Tolerance** | A single miscalculation in tax-loss harvesting = millions in liability |
+
+The painful truth: **"99% accurate" is insufficient for fiduciary execution.**
+
+### The Solution: Neurosymbolic AI
+
+The Cyborg Advisor demonstrates the **2026 architectural pivot**—a fusion of:
+
+| System 1 (LLM) | System 2 (Python) |
+|----------------|-------------------|
+| 🧠 Fast, intuitive | 🔢 Slow, deliberate |
+| Intent parsing | Financial calculations |
 | Natural language | Pandas/NumPy |
-| Response generation | Compliance rules |
-| *"What does the user want?"* | *"What are the exact numbers?"* |
+| "What does the user want?" | "What are the exact numbers?" |
 
-> **Why?** LLMs are excellent at understanding language but unreliable at math. By enforcing a strict separation, we get the best of both worlds: intuitive interfaces with deterministic accuracy.
+> **The Core Principle:** LLMs excel at understanding language but are *unreliable at math*. By enforcing strict separation, we achieve intuitive interfaces with **deterministic accuracy**.
+
+---
+
+## 🎯 What This Demonstrates
+
+The Cyborg Advisor is a **reference implementation** showcasing how to build production-grade AI for regulated industries. It proves:
+
+### 1. The "Math Ban" Architecture
+```
+✅ LLM parses: "Please rebalance to 60% stocks"
+✅ Python calculates: Exact trades using Pandas/NumPy
+❌ LLM never touches the numbers
+```
+
+### 2. Compliance-by-Design
+Every AI action passes through **deterministic validation layers** before execution:
+- Rule A: Cash position ≥ 2% (no negative cash)
+- Rule B: No single trade > 10% of portfolio
+- Transparent, auditable decision logs
+
+### 3. Human-in-the-Loop Governance
+The **"Human-on-the-Loop"** model mandated by EU AI Act:
+- Low risk → Autonomous execution
+- Medium risk → Post-hoc review
+- High risk → **Pre-approval required** (trades pause for human sign-off)
+
+### 4. "Know Your Agent" (KYA) Principles
+- Every agent action is traceable
+- Scope of authority is explicitly defined
+- Complete audit trail for regulatory inquiries
 
 ---
 
@@ -36,195 +87,130 @@ Inspired by Daniel Kahneman's dual-process theory, this system separates:
 
 ```mermaid
 flowchart TB
-    subgraph Input
-        A[👤 User Message]
+    subgraph Neural["🧠 SYSTEM 1: Neural Layer (LLM)"]
+        A[User: 'Rebalance my portfolio'] --> B[Intent Parser]
+        B --> |"intent: rebalance"| C{Route}
     end
     
-    subgraph System1["🧠 System 1 - LLM (Fast Thinking)"]
-        B[Intent Parser]
-        B -->|"intent: query"| C[Response Generator]
-        B -->|"intent: respond"| C
-    end
-    
-    subgraph System2["🔢 System 2 - Python (Slow Thinking)"]
-        D[Financial Calculator]
-        E[Compliance Check]
+    subgraph Symbolic["🔢 SYSTEM 2: Symbolic Layer (Python)"]
+        D[Financial Calculator<br/>Pure Pandas - NO LLM]
+        E[Compliance Engine<br/>Deterministic Rules]
         D --> E
     end
     
-    subgraph HITL["✋ Human-in-the-Loop"]
-        F[Human Review]
+    subgraph Human["✋ HUMAN-IN-THE-LOOP"]
+        F[Review Checkpoint]
         G[Execute Trades]
-        H[Cancel Trades]
+        H[Cancel]
     end
     
-    A --> B
-    B -->|"intent: rebalance"| D
-    E -->|"✅ pass"| F
-    E -->|"❌ fail"| C
-    F -->|"approved"| G
-    F -->|"rejected"| H
+    C --> D
+    E -->|"✅ Pass"| F
+    E -->|"❌ Fail"| I[Error Response]
+    F -->|"Approve"| G
+    F -->|"Reject"| H
     
-    C --> I[📤 Response]
-    G --> I
-    H --> I
-    
-    style System1 fill:#e8f5e9,stroke:#4caf50
-    style System2 fill:#fff3e0,stroke:#ff9800
-    style HITL fill:#e3f2fd,stroke:#2196f3
+    style Neural fill:#e8f5e9,stroke:#4caf50,stroke-width:2px
+    style Symbolic fill:#fff3e0,stroke:#ff9800,stroke-width:2px
+    style Human fill:#e3f2fd,stroke:#2196f3,stroke-width:2px
 ```
+
+### The "Fact-First" Principle
+
+Unlike naive RAG that retrieves text, this architecture:
+
+1. **LLM (Dimension Table)** — Interprets and contextualizes
+2. **Python (Fact Table)** — Stores discrete, verifiable truths
+3. **Validation Layer** — Checks outputs against deterministic constraints
+
+> *"AI doesn't do math; it calls the calculator."*
 
 ---
 
 ## 🚀 Quick Start
 
-### 1. Clone and Setup Virtual Environment
+### 1. Setup Environment
 
 ```bash
-# Navigate to project directory
 cd "c:\Users\hites\Public Projects\CyborgAdvisor"
 
 # Create virtual environment
 python -m venv venv
+venv\Scripts\activate  # Windows
+# source venv/bin/activate  # macOS/Linux
 
-# Activate (Windows)
-venv\Scripts\activate
-
-# Activate (macOS/Linux)
-source venv/bin/activate
-```
-
-### 2. Install Dependencies
-
-```bash
+# Install dependencies
 pip install -r requirements.txt
 ```
 
-### 3. Configure API Key
+### 2. Configure API Key
 
 ```bash
-# Copy example config
 copy .env.example .env
-
-# Edit .env and add your Google API key
-# GOOGLE_API_KEY=your_key_here
+# Edit .env and add: GOOGLE_API_KEY=your_key_here
 ```
 
-### 4. Run the Demo
+### 3. Run the Application
 
 ```bash
-# Full demo with LLM
+# 🌐 Launch Streamlit Web UI (recommended)
+streamlit run app.py
+
+# CLI demo with full LLM workflow
 python main.py
 
-# Simplified demo (calculations only, no LLM)
+# CLI demo (pure calculations, no LLM)
 python main.py --simple
 ```
 
 ---
 
-## 🔧 Configuration
+## 🖥️ The Streamlit UI
 
-### Model Selection
+<div align="center">
 
-The Cyborg Advisor supports **any Google Gemini model**. Configure in `.env`:
+| Feature | Description |
+|---------|-------------|
+| 📊 **Portfolio Dashboard** | Real-time allocation visualization |
+| ✏️ **Custom Portfolio Editor** | Add, edit, delete holdings interactively |
+| 🎯 **Target Allocation Sliders** | Set your desired asset mix |
+| � **System 2 Calculations** | Watch deterministic math, not LLM guessing |
+| 🛡️ **Compliance Status** | See rule validation in real-time |
+| ✋ **Approval Workflow** | Approve or reject trades before execution |
+
+</div>
+
+---
+
+## 🔧 Model Configuration
+
+The Cyborg Advisor supports **any Google Gemini model**:
 
 ```env
-# Choose your model
-MODEL_NAME=gemini-2.0-flash      # Fast, efficient
+# .env configuration
+MODEL_NAME=gemini-2.0-flash      # Fast, efficient (default)
 MODEL_NAME=gemini-2.5-pro        # Most capable
 MODEL_NAME=gemini-2.5-flash      # Balanced
-
-# Model parameters
-MODEL_TEMPERATURE=0.1            # Low for consistency
-MODEL_MAX_TOKENS=4096
 ```
 
-### Runtime Model Switching
-
 ```python
+# Runtime switching
 from src.config import get_llm
-
-# Use default model
-llm = get_llm()
-
-# Override at runtime
-llm = get_llm("gemini-2.5-pro")
+llm = get_llm("gemini-2.5-pro")  # Override anytime
 ```
 
 ---
 
-## 📊 State Machine
+## �️ The Validation Stack
 
-The LangGraph state flows through these nodes:
+### Defense-in-Depth Against Hallucination
 
-```mermaid
-stateDiagram-v2
-    [*] --> IntentParser: User message
-    
-    IntentParser --> FinancialCalculator: rebalance
-    IntentParser --> ResponseGenerator: query/respond
-    
-    FinancialCalculator --> ComplianceCheck: trades calculated
-    
-    ComplianceCheck --> HumanReview: ✅ passed
-    ComplianceCheck --> ResponseGenerator: ❌ failed
-    
-    HumanReview --> ExecuteTrades: approved
-    HumanReview --> CancelTrades: rejected
-    
-    ExecuteTrades --> [*]
-    CancelTrades --> [*]
-    ResponseGenerator --> [*]
-```
-
----
-
-## 🛡️ Compliance Rules
-
-All trades must pass deterministic validation:
-
-| Rule | Description | Threshold |
-|------|-------------|-----------|
-| **Cash Position** | Resulting cash must stay positive | ≥ 2% of portfolio |
-| **Trade Size** | No single trade too large | ≤ 10% of portfolio |
-
-Rules are enforced with pure Python—**no LLM involved**.
-
----
-
-## 💻 API Reference
-
-### AgentState
-
-```python
-class AgentState(TypedDict):
-    messages: list              # Chat history
-    user_input: str             # Current message
-    intent: str                 # rebalance/query/respond
-    portfolio_data: dict        # Current holdings
-    target_allocation: dict     # Target weights
-    proposed_trades: list       # Calculated trades
-    compliance_status: bool     # Passed all rules?
-    compliance_errors: list     # Any violations
-    human_approval: bool        # User approved?
-    response: str               # Output message
-```
-
-### Core Functions
-
-```python
-# Calculate rebalance trades (NO LLM)
-from src.nodes.financial_calculator import calculate_rebalance
-trades = calculate_rebalance(portfolio_data, target_allocation)
-
-# Run compliance checks (NO LLM)
-from src.nodes.compliance_check import run_compliance_checks
-passed, errors = run_compliance_checks(trades, portfolio_data)
-
-# Get configured LLM
-from src.config import get_llm
-llm = get_llm("gemini-2.5-flash")
-```
+| Tier | Purpose | Implementation |
+|------|---------|----------------|
+| **1. Input Guardrails** | Prevent prompt injection | Intent Parser validates scope |
+| **2. Tool Grounding** | "Math Ban" enforcement | LLM calls Python, never calculates |
+| **3. Output Validation** | Logic gates before action | Compliance rules block invalid trades |
+| **4. Human-in-the-Loop** | Risk-based escalation | Checkpoint before execution |
 
 ---
 
@@ -232,27 +218,40 @@ llm = get_llm("gemini-2.5-flash")
 
 ```
 CyborgAdvisor/
-├── main.py                    # Demo entry point
-├── requirements.txt           # Dependencies
-├── .env.example              # Config template
+├── app.py                     # 🌐 Streamlit Web UI
+├── main.py                    # CLI demo entry point
+├── requirements.txt
+├── .env.example
 ├── src/
-│   ├── __init__.py
-│   ├── config.py             # Model configuration
-│   ├── state.py              # AgentState definition
-│   ├── graph.py              # LangGraph state machine
+│   ├── config.py              # Flexible Google model config
+│   ├── state.py               # AgentState TypedDict
+│   ├── graph.py               # LangGraph state machine
 │   └── nodes/
-│       ├── intent_parser.py      # System 1: LLM intent
-│       ├── financial_calculator.py # System 2: Math
-│       ├── compliance_check.py    # System 2: Rules
-│       ├── response_generator.py  # System 1: LLM response
-│       └── human_review.py        # HITL checkpoint
-├── tests/
-│   ├── test_financial_calculator.py
-│   ├── test_compliance_check.py
-│   └── test_graph_flow.py
+│       ├── intent_parser.py       # System 1: LLM intent
+│       ├── financial_calculator.py # System 2: Pandas math
+│       ├── compliance_check.py     # System 2: Rule validation
+│       ├── response_generator.py   # System 1: LLM response
+│       └── human_review.py         # HITL checkpoint
+├── tests/                     # Pytest test suite
 └── docs/
-    └── architecture.md
+    ├── architecture.md        # Detailed technical diagrams
+    └── Deterministic AI Pivot.txt  # Industry context
 ```
+
+---
+
+## 🎓 The Bigger Picture: Operational Alpha
+
+This project demonstrates how firms achieve **"Operational Alpha"**—the competitive advantage from superior operational efficiency:
+
+| Metric | Impact |
+|--------|--------|
+| **Cost-to-Serve** | ↓ 20-30% via automation |
+| **Advisor Capacity** | ↑ 3-5x relationships per advisor |
+| **AUM Retention** | ↑ 15% via predictive engagement |
+| **Turnaround Time** | ↓ 30-50% faster onboarding |
+
+> *"The competitive moat in wealth management is no longer the algorithm—which has become commoditized—but the **architecture of trust** that surrounds it."*
 
 ---
 
@@ -262,38 +261,29 @@ CyborgAdvisor/
 # Run all tests
 pytest tests/ -v
 
-# Test deterministic components only
+# Test deterministic components (no LLM required)
 pytest tests/test_financial_calculator.py -v
 pytest tests/test_compliance_check.py -v
 ```
 
 ---
 
-## 🎯 Design Philosophy
+## 📚 Further Reading
 
-### Why Separate LLM from Calculations?
-
-1. **Accuracy**: LLMs hallucinate numbers. Python doesn't.
-2. **Auditability**: Deterministic code can be verified.
-3. **Reproducibility**: Same inputs = same outputs.
-4. **Compliance**: Regulatory requirements demand explainable math.
-
-### Why Human-in-the-Loop?
-
-1. **Safety**: Large trades need human verification.
-2. **Trust**: Users should approve their own trades.
-3. **Compliance**: Many regulations require human oversight.
-
----
-
-## 📝 License
-
-MIT License - See [LICENSE](LICENSE) for details.
+- [docs/architecture.md](docs/architecture.md) — Detailed technical diagrams and research
 
 ---
 
 <div align="center">
 
-**Built with 🧠 LangGraph • 🐍 Python • 🤖 Google Gemini**
+### **The Art of the Possible**
+
+*This reference implementation proves that AI can be both intelligent AND trustworthy.*
+
+*LLMs for language. Python for math. Humans for judgment.*
+
+---
+
+**Built with** 🧠 LangGraph • 🐍 Python • 🤖 Google Gemini • 📊 Streamlit
 
 </div>
