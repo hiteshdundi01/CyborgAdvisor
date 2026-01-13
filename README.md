@@ -132,7 +132,7 @@ Unlike naive RAG that retrieves text, this architecture:
 ### 1. Setup Environment
 
 ```bash
-cd "c:\Users\hites\Public Projects\CyborgAdvisor"
+cd "c:\Users\folder name"
 
 # Create virtual environment
 python -m venv venv
