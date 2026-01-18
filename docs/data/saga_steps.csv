@@ -1,0 +1,5 @@
+Step;Forward Action;Compensating Action
+1 (Validate);Validate market conditions;(No-op—validation is read-only)
+2 (Sell);Sell overweight assets;Buy back the assets
+3 (Settle);Settle cash;(Previous step handles it)
+4 (Buy);Buy underweight assets;🔒 PIVOT—Point of No Return

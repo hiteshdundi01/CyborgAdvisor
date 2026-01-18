@@ -1,0 +1,5 @@
+System Comparison;Neural Layer (System 1);Symbolic Layer (System 2)
+Core Technology;LLM (Gemini/GPT/Claude);Pure Python + Pandas
+Function;Handles Intent, Language, Context;Handles All Calculations
+Temperature;Variable (High/Low);Zero (Deterministic)
+Output;Structured Variables;Deterministic Numbers
