@@ -105,6 +105,56 @@ st.markdown("""
         border-radius: 8px;
         margin: 10px 0;
     }
+    
+    /* Saga step visualization */
+    .saga-step {
+        padding: 12px 16px;
+        border-radius: 8px;
+        margin: 8px 0;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    
+    .saga-step-pending {
+        background: rgba(148, 163, 184, 0.2);
+        border-left: 4px solid #94a3b8;
+    }
+    
+    .saga-step-running {
+        background: rgba(59, 130, 246, 0.2);
+        border-left: 4px solid #3b82f6;
+        animation: pulse 1.5s infinite;
+    }
+    
+    .saga-step-success {
+        background: rgba(16, 185, 129, 0.2);
+        border-left: 4px solid #10b981;
+    }
+    
+    .saga-step-failed {
+        background: rgba(239, 68, 68, 0.2);
+        border-left: 4px solid #ef4444;
+    }
+    
+    .saga-step-compensated {
+        background: rgba(251, 191, 36, 0.2);
+        border-left: 4px solid #fbbf24;
+    }
+    
+    .saga-transaction-id {
+        font-family: monospace;
+        background: rgba(0, 212, 255, 0.1);
+        padding: 8px 12px;
+        border-radius: 6px;
+        border: 1px solid rgba(0, 212, 255, 0.3);
+        color: #00d4ff;
+    }
+    
+    @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.6; }
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -143,6 +193,16 @@ if "messages" not in st.session_state:
 
 if "processing_stage" not in st.session_state:
     st.session_state.processing_stage = None
+
+# Saga execution state
+if "saga_logs" not in st.session_state:
+    st.session_state.saga_logs = None
+
+if "saga_status" not in st.session_state:
+    st.session_state.saga_status = None
+
+if "saga_transaction_id" not in st.session_state:
+    st.session_state.saga_transaction_id = None
 
 
 def get_current_allocation(portfolio: dict) -> dict:
@@ -492,17 +552,88 @@ if st.session_state.proposed_trades:
             col1, col2, col3 = st.columns([1, 1, 2])
             with col1:
                 if st.button("✅ Approve & Execute", type="primary"):
-                    with st.spinner("Executing trades..."):
-                        time.sleep(1)
-                    st.balloons()
-                    st.success("🎉 Trades executed successfully!")
-                    st.session_state.proposed_trades = None
-                    st.session_state.compliance_status = None
+                    # Execute using Saga Pattern
+                    from src.sagas import RebalanceSaga
+                    from src.sagas.core import SagaContext, SagaStatus
+                    
+                    # Build saga context
+                    ctx: SagaContext = {
+                        "transaction_id": "",
+                        "portfolio_data": portfolio,
+                        "proposed_trades": trades,
+                        "executed_steps": [],
+                        "logs": [],
+                        "error": None,
+                    }
+                    
+                    # Show execution panel
+                    st.markdown("### 🔄 Saga Execution")
+                    
+                    # Execute saga
+                    saga = RebalanceSaga()
+                    result = saga.run(ctx)
+                    
+                    # Store in session state
+                    st.session_state.saga_logs = [log.to_dict() for log in result.logs]
+                    st.session_state.saga_status = result.status.value
+                    st.session_state.saga_transaction_id = result.transaction_id
+                    
+                    # Display transaction ID
+                    st.markdown(f"""
+                    <div class="saga-transaction-id">
+                        🔑 Transaction ID: {result.transaction_id}
+                    </div>
+                    """, unsafe_allow_html=True)
+                    
+                    # Display step logs
+                    for log in result.logs:
+                        status_class = {
+                            "success": "saga-step-success",
+                            "failed": "saga-step-failed",
+                            "compensated": "saga-step-compensated",
+                            "compensating": "saga-step-compensated",
+                            "running": "saga-step-running",
+                            "pending": "saga-step-pending",
+                            "skipped": "saga-step-pending",
+                        }.get(log.status.value, "saga-step-pending")
+                        
+                        status_emoji = {
+                            "success": "✅",
+                            "failed": "❌",
+                            "compensated": "🔄",
+                            "compensating": "🔄",
+                            "running": "⏳",
+                            "pending": "⏸️",
+                            "skipped": "⏭️",
+                        }.get(log.status.value, "•")
+                        
+                        st.markdown(f"""
+                        <div class="saga-step {status_class}">
+                            <span>{status_emoji}</span>
+                            <strong>{log.step_name}</strong>
+                            <span style="opacity: 0.7;">— {log.message}</span>
+                        </div>
+                        """, unsafe_allow_html=True)
+                    
+                    # Final status
+                    if result.status == SagaStatus.SUCCESS:
+                        st.balloons()
+                        st.success("🎉 **Saga Complete!** Portfolio rebalanced successfully.")
+                        st.session_state.proposed_trades = None
+                        st.session_state.compliance_status = None
+                    elif result.status == SagaStatus.ROLLED_BACK:
+                        st.warning(f"⚠️ **Saga Rolled Back**: {result.error}")
+                        st.info("No changes were made to your portfolio.")
+                    else:
+                        st.error(f"❌ **Saga Failed**: {result.error}")
             
             with col2:
                 if st.button("❌ Cancel"):
                     st.session_state.proposed_trades = None
                     st.session_state.compliance_status = None
+                    st.session_state.saga_logs = None
+                    st.session_state.saga_status = None
+                    st.session_state.saga_transaction_id = None
                     st.rerun()
         
         elif compliance:

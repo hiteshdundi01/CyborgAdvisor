@@ -103,35 +103,92 @@ def route_by_approval(state: AgentState) -> str:
 
 def execute_trades(state: AgentState) -> dict:
     """
-    Execute the approved trades (mock implementation).
+    Execute the approved trades using the Saga Pattern.
     
-    In a real system, this would integrate with a broker API.
-    For this prototype, we just print/log the execution.
+    This replaces the simple mock with a full transactional saga
+    that provides rollback capabilities on failure.
     
     Args:
         state: Current agent state
         
     Returns:
-        dict: Execution confirmation
+        dict: Execution result with saga logs and status
     """
+    from ..sagas import RebalanceSaga, SagaStatus
+    from ..sagas.core import SagaContext
+    
     trades = state.get("proposed_trades", [])
+    portfolio = state.get("portfolio_data", {})
     
-    # Mock execution - in production this would call broker APIs
-    execution_log = ["🚀 **Trades Executed Successfully!**\n"]
+    if not trades:
+        return {
+            "response": "No trades to execute.",
+            "saga_status": "success",
+            "saga_logs": [],
+        }
     
-    for trade in trades:
-        execution_log.append(
-            f"✓ {trade['action']} ${trade['amount']:,.2f} of {trade['asset']}"
+    # Build saga context
+    ctx: SagaContext = {
+        "transaction_id": "",  # Will be generated
+        "portfolio_data": portfolio,
+        "proposed_trades": trades,
+        "executed_steps": [],
+        "logs": [],
+        "error": None,
+    }
+    
+    # Execute the rebalance saga
+    saga = RebalanceSaga()
+    result = saga.run(ctx)
+    
+    # Build response based on result
+    logs_display = []
+    for log in result.logs:
+        status_emoji = {
+            "success": "✅",
+            "failed": "❌",
+            "compensated": "🔄",
+            "compensating": "🔄",
+            "running": "⏳",
+            "pending": "⏸️",
+            "skipped": "⏭️",
+        }.get(log.status.value, "•")
+        
+        logs_display.append(f"{status_emoji} **{log.step_name}**: {log.message}")
+    
+    if result.status == SagaStatus.SUCCESS:
+        response = (
+            "🚀 **Saga Execution Complete!**\n\n"
+            f"**Transaction ID:** `{result.transaction_id}`\n\n"
+            "**Execution Log:**\n" +
+            "\n".join(logs_display) +
+            "\n\n📊 Your portfolio has been rebalanced."
         )
-    
-    execution_log.append("\n📊 Your portfolio has been rebalanced.")
-    
-    response = "\n".join(execution_log)
+    elif result.status == SagaStatus.ROLLED_BACK:
+        response = (
+            "⚠️ **Saga Rolled Back**\n\n"
+            f"**Transaction ID:** `{result.transaction_id}`\n\n"
+            f"**Error:** {result.error}\n\n"
+            "**Execution Log:**\n" +
+            "\n".join(logs_display) +
+            "\n\n❌ No changes were made to your portfolio."
+        )
+    else:
+        response = (
+            f"❌ **Saga Failed**\n\n"
+            f"**Transaction ID:** `{result.transaction_id}`\n\n"
+            f"**Error:** {result.error}\n\n"
+            "**Execution Log:**\n" +
+            "\n".join(logs_display)
+        )
     
     return {
         "response": response,
         "messages": [AIMessage(content=response)],
-        "proposed_trades": [],  # Clear executed trades
+        "proposed_trades": [] if result.status == SagaStatus.SUCCESS else trades,
+        "saga_transaction_id": result.transaction_id,
+        "saga_status": result.status.value,
+        "saga_logs": [log.to_dict() for log in result.logs],
     }
 
 

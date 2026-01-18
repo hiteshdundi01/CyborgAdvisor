@@ -85,6 +85,8 @@ The **"Human-on-the-Loop"** model mandated by EU AI Act:
 
 ## 📐 Architecture
 
+### The Neurosymbolic Stack + Transactional Saga Pattern
+
 ```mermaid
 flowchart TB
     subgraph Neural["🧠 SYSTEM 1: Neural Layer (LLM)"]
@@ -98,9 +100,20 @@ flowchart TB
         D --> E
     end
     
+    subgraph Saga["🔄 SAGA ORCHESTRATOR"]
+        S1[1. ValidateMarket]
+        S2[2. PlaceSellOrders]
+        S3[3. SettleCash]
+        S4[4. PlaceBuyOrders 🔒]
+        S1 --> S2 --> S3 --> S4
+        S4 -.->|"Failure"| R3[Compensate S3]
+        R3 -.-> R2[Compensate S2]
+        R2 -.-> R1[Compensate S1]
+    end
+    
     subgraph Human["✋ HUMAN-IN-THE-LOOP"]
         F[Review Checkpoint]
-        G[Execute Trades]
+        G[Saga Execution]
         H[Cancel]
     end
     
@@ -108,12 +121,28 @@ flowchart TB
     E -->|"✅ Pass"| F
     E -->|"❌ Fail"| I[Error Response]
     F -->|"Approve"| G
+    G --> Saga
     F -->|"Reject"| H
     
     style Neural fill:#e8f5e9,stroke:#4caf50,stroke-width:2px
     style Symbolic fill:#fff3e0,stroke:#ff9800,stroke-width:2px
     style Human fill:#e3f2fd,stroke:#2196f3,stroke-width:2px
+    style Saga fill:#fce4ec,stroke:#e91e63,stroke-width:2px
 ```
+
+### The Saga Pattern: Transactional Integrity
+
+| Component | Description |
+|-----------|-------------|
+| **Orchestrator** | Python state machine (not the LLM) that manages workflow |
+| **Local Transactions** | Atomic steps: ValidateMarket → PlaceSellOrders → SettleCash → PlaceBuyOrders |
+| **Compensating Transactions** | Automatic "undo" for each step if a later step fails |
+| **Pivot Transaction** | Point-of-no-return (🔒) — PlaceBuyOrders cannot be reversed |
+| **Idempotency** | Duplicate requests are detected and skipped |
+
+> **Critical Question:** *"If the AI Agent crashes halfway through a portfolio rebalance, does the system automatically revert to the original state, or does it leave the client in cash?"*
+> 
+> **Answer:** The Saga Pattern ensures automatic rollback. If Step 4 fails, Steps 3, 2, and 1 are compensated in reverse order.
 
 ### The "Fact-First" Principle
 
@@ -121,9 +150,10 @@ Unlike naive RAG that retrieves text, this architecture:
 
 1. **LLM (Dimension Table)** — Interprets and contextualizes
 2. **Python (Fact Table)** — Stores discrete, verifiable truths
-3. **Validation Layer** — Checks outputs against deterministic constraints
+3. **Saga Layer** — Ensures transactional integrity with rollback
+4. **Validation Layer** — Checks outputs against deterministic constraints
 
-> *"AI doesn't do math; it calls the calculator."*
+> *"AI doesn't do math; it calls the calculator. And if it fails, it hits Ctrl+Z."*
 
 ---
 
@@ -226,12 +256,15 @@ CyborgAdvisor/
 │   ├── config.py              # Flexible Google model config
 │   ├── state.py               # AgentState TypedDict
 │   ├── graph.py               # LangGraph state machine
-│   └── nodes/
-│       ├── intent_parser.py       # System 1: LLM intent
-│       ├── financial_calculator.py # System 2: Pandas math
-│       ├── compliance_check.py     # System 2: Rule validation
-│       ├── response_generator.py   # System 1: LLM response
-│       └── human_review.py         # HITL checkpoint
+│   ├── nodes/
+│   │   ├── intent_parser.py       # System 1: LLM intent
+│   │   ├── financial_calculator.py # System 2: Pandas math
+│   │   ├── compliance_check.py     # System 2: Rule validation
+│   │   ├── response_generator.py   # System 1: LLM response
+│   │   └── human_review.py         # HITL + Saga execution
+│   └── sagas/                 # 🔄 Transactional Saga Engine
+│       ├── core.py                # SagaOrchestrator, TransactionStep
+│       └── rebalance.py           # 4-step Rebalance Saga
 ├── tests/                     # Pytest test suite
 └── docs/
     ├── architecture.md        # Detailed technical diagrams

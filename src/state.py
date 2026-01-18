@@ -66,6 +66,11 @@ class AgentState(TypedDict):
     # Output
     response: Optional[str]
     error: Optional[str]
+    
+    # Saga execution tracking
+    saga_transaction_id: Optional[str]
+    saga_status: Optional[str]  # "pending", "executing", "success", "rolled_back", "failed"
+    saga_logs: Optional[list[dict]]
 
 
 def create_initial_state(
@@ -96,6 +101,9 @@ def create_initial_state(
         human_approval=None,
         response=None,
         error=None,
+        saga_transaction_id=None,
+        saga_status=None,
+        saga_logs=None,
     )
 
 
