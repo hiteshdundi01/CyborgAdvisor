@@ -26,12 +26,119 @@ from src.sagas.tax_loss_harvesting import (
     FUND_FAMILY_MAPPING,
 )
 from src.sagas.core import SagaContext, SagaStatus, StepStatus
-from src.nodes.tax_analyzer import (
-    generate_mock_tax_lots,
-    generate_mock_transaction_history,
-    identify_loss_opportunities,
-    calculate_tax_impact,
-)
+
+
+# =============================================================================
+# Helper Functions (avoid langchain dependency)
+# =============================================================================
+
+def identify_loss_opportunities(
+    tax_lots: list[dict],
+    min_threshold: float = 100.0,
+    max_positions: int = 10,
+) -> list[dict]:
+    """Identify tax-loss harvesting opportunities using FIFO ordering."""
+    losses = [
+        lot for lot in tax_lots
+        if lot.get("unrealized_gain_loss", 0) < -min_threshold
+    ]
+    losses.sort(key=lambda x: x.get("unrealized_gain_loss", 0))
+    return losses[:max_positions]
+
+
+def calculate_tax_impact(
+    losses: list[dict],
+    federal_rate: float = 0.24,
+    state_rate: float = 0.05,
+    long_term_rate: float = 0.15,
+) -> dict:
+    """Calculate estimated tax savings from harvesting losses."""
+    short_term_losses = sum(
+        abs(lot.get("unrealized_gain_loss", 0))
+        for lot in losses
+        if lot.get("holding_period") == "short_term"
+    )
+    
+    long_term_losses = sum(
+        abs(lot.get("unrealized_gain_loss", 0))
+        for lot in losses
+        if lot.get("holding_period") == "long_term"
+    )
+    
+    total_losses = short_term_losses + long_term_losses
+    short_term_savings = short_term_losses * (federal_rate + state_rate)
+    long_term_savings = long_term_losses * long_term_rate
+    total_savings = short_term_savings + long_term_savings
+    
+    return {
+        "short_term_losses": round(short_term_losses, 2),
+        "long_term_losses": round(long_term_losses, 2),
+        "total_losses": round(total_losses, 2),
+        "estimated_short_term_savings": round(short_term_savings, 2),
+        "estimated_long_term_savings": round(long_term_savings, 2),
+        "total_estimated_savings": round(total_savings, 2),
+    }
+
+
+def generate_mock_tax_lots() -> list[dict]:
+    """Generate 28 realistic tax lot entries for testing."""
+    base_date = datetime.now()
+    
+    mock_data = [
+        ("AAPL", 185.50, 172.30, 50, base_date - timedelta(days=45)),
+        ("AAPL", 192.00, 172.30, 30, base_date - timedelta(days=120)),
+        ("MSFT", 420.00, 385.50, 25, base_date - timedelta(days=200)),
+        ("GOOGL", 155.00, 138.20, 40, base_date - timedelta(days=90)),
+        ("NVDA", 890.00, 750.00, 15, base_date - timedelta(days=60)),
+        ("META", 520.00, 485.00, 20, base_date - timedelta(days=180)),
+        ("VTI", 265.00, 248.50, 100, base_date - timedelta(days=400)),
+        ("VOO", 480.00, 455.00, 50, base_date - timedelta(days=450)),
+        ("BND", 78.00, 72.50, 200, base_date - timedelta(days=500)),
+        ("VXUS", 62.00, 55.80, 150, base_date - timedelta(days=380)),
+        ("GLD", 195.00, 182.00, 60, base_date - timedelta(days=100)),
+        ("AAPL", 125.00, 172.30, 100, base_date - timedelta(days=800)),
+        ("MSFT", 280.00, 385.50, 50, base_date - timedelta(days=900)),
+        ("GOOGL", 95.00, 138.20, 80, base_date - timedelta(days=750)),
+        ("AMZN", 145.00, 185.50, 45, base_date - timedelta(days=600)),
+        ("VTI", 195.00, 248.50, 200, base_date - timedelta(days=1100)),
+        ("VOO", 350.00, 455.00, 75, base_date - timedelta(days=950)),
+        ("TSLA", 265.00, 248.00, 35, base_date - timedelta(days=150)),
+        ("TSLA", 180.00, 248.00, 25, base_date - timedelta(days=420)),
+        ("SPY", 485.00, 472.00, 40, base_date - timedelta(days=80)),
+        ("IVV", 520.00, 505.00, 30, base_date - timedelta(days=95)),
+        ("AGG", 105.00, 98.50, 150, base_date - timedelta(days=300)),
+        ("VNQ", 95.00, 88.00, 80, base_date - timedelta(days=250)),
+        ("SCHB", 58.00, 54.50, 120, base_date - timedelta(days=180)),
+        ("IXUS", 72.00, 65.50, 90, base_date - timedelta(days=220)),
+        ("IAU", 42.00, 39.50, 100, base_date - timedelta(days=130)),
+        ("SCHZ", 52.00, 48.80, 180, base_date - timedelta(days=280)),
+        ("IYR", 102.00, 96.00, 55, base_date - timedelta(days=190)),
+    ]
+    
+    tax_lots = []
+    for i, (asset, purchase_price, current_price, quantity, purchase_date) in enumerate(mock_data):
+        lot_id = f"LOT_{asset}_{i+1:03d}"
+        cost_basis = purchase_price * quantity
+        current_value = current_price * quantity
+        unrealized_gain_loss = current_value - cost_basis
+        days_held = (base_date - purchase_date).days
+        holding_period = "long_term" if days_held >= 365 else "short_term"
+        
+        tax_lots.append({
+            "lot_id": lot_id,
+            "asset": asset,
+            "purchase_date": purchase_date.isoformat(),
+            "purchase_price": purchase_price,
+            "quantity": quantity,
+            "current_price": current_price,
+            "cost_basis": round(cost_basis, 2),
+            "current_value": round(current_value, 2),
+            "unrealized_gain_loss": round(unrealized_gain_loss, 2),
+            "holding_period": holding_period,
+            "days_held": days_held,
+        })
+    
+    return tax_lots
 
 
 # =============================================================================
