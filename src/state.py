@@ -71,6 +71,18 @@ class AgentState(TypedDict):
     saga_transaction_id: Optional[str]
     saga_status: Optional[str]  # "pending", "executing", "success", "rolled_back", "failed"
     saga_logs: Optional[list[dict]]
+    
+    # Tax Loss Harvesting fields
+    tax_lots: Optional[list[dict]]  # Tax lot data for cost basis tracking
+    transaction_history: Optional[list[dict]]  # Historical transactions for wash sale check
+    tlh_opportunities: Optional[list[dict]]  # Identified loss positions
+    tlh_wash_sale_violations: Optional[list[dict]]  # Any wash sale conflicts
+    tlh_valid_opportunities: Optional[list[dict]]  # Opportunities after wash sale check
+    tlh_harvested_losses: Optional[float]  # Total losses harvested
+    tlh_replacement_securities: Optional[list[dict]]  # Replacement purchases
+    tlh_tax_records: Optional[list[dict]]  # Tax lot records for reporting
+    tlh_tax_impact: Optional[dict]  # Estimated tax savings
+    tlh_min_threshold: Optional[float]  # Minimum loss threshold for harvesting
 
 
 def create_initial_state(

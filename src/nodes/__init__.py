@@ -24,6 +24,15 @@ from .human_review import (
     cancel_trades,
     route_by_approval,
 )
+from .tax_analyzer import (
+    tax_analyzer,
+    identify_loss_opportunities,
+    calculate_tax_impact,
+    check_wash_sale_window,
+    generate_mock_tax_lots,
+    generate_mock_transaction_history,
+    format_tlh_summary,
+)
 
 __all__ = [
     # Intent Parser
@@ -46,4 +55,13 @@ __all__ = [
     "execute_trades",
     "cancel_trades",
     "route_by_approval",
+    # Tax Analyzer
+    "tax_analyzer",
+    "identify_loss_opportunities",
+    "calculate_tax_impact",
+    "check_wash_sale_window",
+    "generate_mock_tax_lots",
+    "generate_mock_transaction_history",
+    "format_tlh_summary",
 ]
+
