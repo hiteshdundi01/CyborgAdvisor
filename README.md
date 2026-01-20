@@ -376,8 +376,8 @@ This project is the technical companion to a Substack series:
 | Part | Title | Focus |
 |------|-------|-------|
 | **Part 1** | The Day the Chatbot Died | The "Trust Wall" and why GenAI failed in finance |
-| **Part 2** | [The Engineering of Trust](substack_article.md) | The Math Ban, Neurosymbolic Architecture, Saga Pattern |
-| **Part 3** | [When the IRS Becomes Your Competitive Advantage](substack_article_part3.md) | Tax-Loss Harvesting, Wash Sale Detection, Tax Alpha |
+| **Part 2** | The Engineering of Trust | The Math Ban, Neurosymbolic Architecture, Saga Pattern |
+| **Part 3** | Coming Soon | Tax-Loss Harvesting, Wash Sale Detection, Tax Alpha |
 
 ---
 
