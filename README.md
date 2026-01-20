@@ -2,7 +2,7 @@
 
 <div align="center">
 
-### **The Neurosymbolic Portfolio Rebalancer**
+### **The Neurosymbolic Financial Advisor**
 
 *A reference implementation of the "Deterministic AI Pivot" for Wealth Management*
 
