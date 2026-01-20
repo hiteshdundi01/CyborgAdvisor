@@ -375,8 +375,8 @@ This project is the technical companion to a Substack series:
 
 | Part | Title | Focus |
 |------|-------|-------|
-| **Part 1** | The Day the Chatbot Died | The "Trust Wall" and why GenAI failed in finance |
-| **Part 2** | The Engineering of Trust | The Math Ban, Neurosymbolic Architecture, Saga Pattern |
+| **Part 1** | The Wealth Management "Trust Wall": Why the Industry is Pivoting to Deterministic AI | From Probabilistic Vibes to Architectural Logic: A 2026 Roadmap for Achieving Operational Alpha through Neurosymbolic AI.|
+| **Part 2** | Cyborg Advisor Blueprint: A Reference Architecture for AI Wealth Management | The Math Ban, Neurosymbolic Architecture, Saga Pattern. Designing for Operational Alpha: A deep dive into the code and compliance-by-design principles of the next decade's Wealthtech. |
 | **Part 3** | Coming Soon | Tax-Loss Harvesting, Wash Sale Detection, Tax Alpha |
 
 ---
