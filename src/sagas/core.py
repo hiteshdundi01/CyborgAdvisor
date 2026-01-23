@@ -11,10 +11,13 @@ Implements the core Saga pattern components:
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import TypedDict, Optional, Callable
+from typing import TypedDict, Optional, Callable, TYPE_CHECKING
 from datetime import datetime
 import uuid
 import hashlib
+
+if TYPE_CHECKING:
+    from src.audit import AuditStore, AgentIdentity
 
 
 class SagaStatus(Enum):
@@ -40,12 +43,19 @@ class StepStatus(Enum):
 
 @dataclass
 class StepLog:
-    """Log entry for a single step execution."""
+    """Log entry for a single step execution.
+    
+    Enhanced with audit metadata for SEC/FCA Explainability Mandate compliance.
+    """
     step_name: str
     status: StepStatus
     timestamp: datetime = field(default_factory=datetime.now)
     message: str = ""
     error: Optional[str] = None
+    # Audit enhancements
+    reasoning_trace: str = ""  # Chain of thought explaining WHY
+    validation_results: list = field(default_factory=list)  # Gate check results
+    is_pivot: bool = False  # Marks point-of-no-return
     
     def to_dict(self) -> dict:
         return {
@@ -54,6 +64,9 @@ class StepLog:
             "timestamp": self.timestamp.isoformat(),
             "message": self.message,
             "error": self.error,
+            "reasoning_trace": self.reasoning_trace,
+            "validation_results": self.validation_results,
+            "is_pivot": self.is_pivot,
         }
 
 
@@ -163,6 +176,8 @@ class SagaOrchestrator:
         steps: list[TransactionStep],
         on_step_start: Optional[Callable[[str, int, int], None]] = None,
         on_step_complete: Optional[Callable[[str, StepStatus], None]] = None,
+        agent_id: Optional[str] = None,
+        audit_store: Optional["AuditStore"] = None,
     ):
         """
         Initialize the orchestrator.
@@ -171,10 +186,14 @@ class SagaOrchestrator:
             steps: Ordered list of transaction steps
             on_step_start: Callback(step_name, current_index, total) called before each step
             on_step_complete: Callback(step_name, status) called after each step
+            agent_id: DID of the executing agent (for audit trail)
+            audit_store: AuditStore instance for logging events
         """
         self.steps = steps
         self.on_step_start = on_step_start
         self.on_step_complete = on_step_complete
+        self.agent_id = agent_id
+        self.audit_store = audit_store
         
         # Idempotency store: {transaction_id: SagaStatus}
         self._idempotency_store: dict[str, SagaStatus] = {}

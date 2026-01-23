@@ -32,6 +32,19 @@ from src.sagas.tax_loss_harvesting import (
     get_replacement_suggestions,
     FUND_FAMILY_MAPPING,
 )
+from src.audit import (
+    AuditStore,
+    AuditEvent,
+    AuditEventType,
+    AgentAuthority,
+    AgentRegistry,
+    AgentIdentity,
+    DeterministicValidator,
+    get_global_audit_store,
+    get_global_registry,
+    TLH_AGENT,
+    REBALANCE_AGENT,
+)
 
 
 # =============================================================================
@@ -502,6 +515,157 @@ async def saga_stream(transaction_id: str):
         saga_event_generator(transaction_id),
         media_type="text/event-stream",
     )
+
+
+# =============================================================================
+# Audit Endpoints (SEC/FCA Explainability Mandate)
+# =============================================================================
+
+class AuditQuery(BaseModel):
+    start_date: Optional[str] = None
+    end_date: Optional[str] = None
+    agent_id: Optional[str] = None
+    event_type: Optional[str] = None
+
+
+@app.get("/api/v1/audit/transactions")
+async def list_audit_transactions(
+    start_date: Optional[str] = None,
+    end_date: Optional[str] = None,
+    saga_type: Optional[str] = None,
+    status: Optional[str] = None,
+    limit: int = 100,
+):
+    """
+    Query all audited transactions with filtering.
+    
+    Satisfies SEC "System of Record" requirement for transaction traceability.
+    """
+    audit_store = get_global_audit_store()
+    
+    # Parse dates if provided
+    from_dt = datetime.fromisoformat(start_date) if start_date else None
+    to_dt = datetime.fromisoformat(end_date) if end_date else None
+    
+    events = audit_store.get_events(start_date=from_dt, end_date=to_dt)
+    
+    # Group by transaction_id
+    transactions: dict[str, dict] = {}
+    for event in events:
+        tid = event.saga_transaction_id
+        if tid not in transactions:
+            transactions[tid] = {
+                "transaction_id": tid,
+                "first_event": event.timestamp.isoformat(),
+                "last_event": event.timestamp.isoformat(),
+                "event_count": 0,
+                "agent_id": event.agent_id,
+                "status": "unknown",
+            }
+        transactions[tid]["event_count"] += 1
+        transactions[tid]["last_event"] = event.timestamp.isoformat()
+        if event.event_type == AuditEventType.SAGA_COMPLETED:
+            transactions[tid]["status"] = "completed"
+        elif event.event_type == AuditEventType.ERROR_OCCURRED:
+            transactions[tid]["status"] = "failed"
+    
+    return {
+        "transactions": list(transactions.values())[:limit],
+        "total": len(transactions),
+    }
+
+
+@app.get("/api/v1/audit/transactions/{transaction_id}/trace")
+async def get_transaction_trace(transaction_id: str):
+    """
+    Get full event trace for a transaction.
+    
+    Returns the complete "chain of thought" for regulatory audit.
+    Captures WHY, WHAT, and WHO for each step.
+    """
+    audit_store = get_global_audit_store()
+    events = audit_store.get_transaction_trace(transaction_id)
+    
+    if not events:
+        raise HTTPException(status_code=404, detail="Transaction not found in audit log")
+    
+    return {
+        "transaction_id": transaction_id,
+        "event_count": len(events),
+        "events": [e.to_dict() for e in events],
+    }
+
+
+@app.get("/api/v1/audit/report")
+async def generate_audit_report(
+    start_date: str,
+    end_date: str,
+):
+    """
+    Generate compliance report for date range.
+    
+    Provides aggregate statistics for regulatory review.
+    """
+    audit_store = get_global_audit_store()
+    
+    from_dt = datetime.fromisoformat(start_date)
+    to_dt = datetime.fromisoformat(end_date)
+    
+    report = audit_store.get_audit_report(from_dt, to_dt)
+    return report.to_dict()
+
+
+@app.get("/api/v1/audit/export/{transaction_id}")
+async def export_transaction(
+    transaction_id: str,
+    format: str = "json",
+):
+    """
+    Export transaction trace for regulators.
+    
+    Supports JSON and CSV formats for SEC/FCA submissions.
+    """
+    audit_store = get_global_audit_store()
+    export_data = audit_store.export_for_regulators(transaction_id, format)
+    
+    if format == "csv":
+        from fastapi.responses import PlainTextResponse
+        return PlainTextResponse(
+            content=export_data,
+            media_type="text/csv",
+            headers={"Content-Disposition": f"attachment; filename=audit_{transaction_id}.csv"}
+        )
+    
+    return json.loads(export_data) if export_data else []
+
+
+@app.get("/api/v1/audit/agents")
+async def list_agents():
+    """
+    List all registered agents (KYA framework).
+    
+    Returns agent identities, authorities, and ownership.
+    """
+    registry = get_global_registry()
+    agents = registry.list_agents()
+    return {
+        "agents": [a.to_dict() for a in agents],
+        "total": len(agents),
+    }
+
+
+@app.get("/api/v1/audit/agents/{agent_id}")
+async def get_agent(agent_id: str):
+    """
+    Get agent details by ID.
+    """
+    registry = get_global_registry()
+    agent = registry.get_agent(agent_id)
+    
+    if not agent:
+        raise HTTPException(status_code=404, detail="Agent not found")
+    
+    return agent.to_dict()
 
 
 # =============================================================================
