@@ -1,112 +1,146 @@
-# 🤖 Cyborg Advisor
-
 <div align="center">
+
+# 🤖 Cyborg Advisor
 
 ### **The Neurosymbolic Financial Advisor**
 
-*A reference implementation of the "Deterministic AI Pivot" for Wealth Management*
+*A production-ready reference implementation of the "Deterministic AI Pivot" for Wealth Management*
 
-[![Python](https://img.shields.io/badge/Python-3.10+-blue?logo=python)](https://python.org)
-[![LangGraph](https://img.shields.io/badge/LangGraph-Agentic_Workflows-purple)](https://langchain-ai.github.io/langgraph/)
-[![React](https://img.shields.io/badge/React-18-61dafb?logo=react)](https://react.dev)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.109+-009688?logo=fastapi)](https://fastapi.tiangolo.com)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178c6?logo=typescript)](https://typescriptlang.org)
+[![Python](https://img.shields.io/badge/Python-3.10+-blue?logo=python&logoColor=white)](https://python.org)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178c6?logo=typescript&logoColor=white)](https://typescriptlang.org)
+[![React](https://img.shields.io/badge/React-18-61dafb?logo=react&logoColor=white)](https://react.dev)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.109+-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+[![LangGraph](https://img.shields.io/badge/LangGraph-Agentic-purple?logo=chainlink&logoColor=white)](https://langchain-ai.github.io/langgraph/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE.md)
 
 ---
 
-**LLMs handle intent. Python handles math. Humans stay in control.**
+**🧠 LLMs for Language** · **🔢 Python for Math** · **🔄 Sagas for Transactions** · **🛡️ Logs for Audits** · **✋ Humans for Judgment**
+
+[**📖 Read the Series**](#-the-wealth-ai-series) · [**🚀 Quick Start**](#-quick-start) · [**📐 Architecture**](#-architecture) · [**🔒 Security**](SECURITY.md)
 
 </div>
 
 ---
 
-## 📖 The Story: The Day the Chatbot Died
+## 💡 What is this?
 
-> *"Warren Buffett once said, 'It takes 20 years to build a reputation and five minutes to ruin it.' AI can do it in five milliseconds."*
-> — **The Day the Chatbot Died, Part 2**
+The **Cyborg Advisor** is a **reference architecture** for building AI-powered financial applications that are:
 
-### The GenAI Bubble (2024-2025)
+| Challenge | Our Solution |
+|-----------|--------------|
+| ❌ LLMs hallucinate numbers | ✅ **The Math Ban:** LLMs *never* calculate. They route to deterministic Python. |
+| ❌ Transactions can fail mid-way | ✅ **The Saga Pattern:** Every action is reversible until the "Pivot Point." |
+| ❌ Regulators demand explainability | ✅ **Know Your Agent (KYA):** Every agent has a passport (DID) and an audit trail. |
+| ❌ Personalization doesn't scale | ✅ **Direct Indexing:** Build 1,000 unique portfolios with the same code. |
 
-The wealth management industry rushed headlong into generative AI. "ChatGPT for finance!" the pitch decks proclaimed. Chatbots proliferated. Demos dazzled. And then came the **Trust Wall**.
-
-| ❌ The Problem | Why It Failed |
-|----------------|---------------|
-| **Hallucinations** | LLMs fabricate numbers and rules with confident language |
-| **Non-Determinism** | Same question → different answers (unacceptable for audits) |
-| **Black Box Opacity** | No explainable chain of thought for regulators |
-| **Zero Tolerance** | A single miscalculation = millions in liability |
-
-The first generation of "AI financial advisors" became case studies in securities law courses—not as examples of innovation, but as examples of *what not to do*.
-
-### The 2026 Pivot: Deterministic Workflows
-
-> *"The 'GenAI Bubble' of 2024-2025 has effectively cooled, giving way to a more rigorous, disciplined operational reality. Trust is an engineering problem, not merely a branding exercise."*
-> — **The Deterministic AI Pivot**
-
-The industry discovered that **the failure wasn't AI—it was architecture**.
-
-The solution: **Neurosymbolic AI**—architectures that fuse the reasoning capabilities of LLMs (the "Brain") with rigid, rule-based execution engines (the "Nervous System"). The result:
-
-| Metric | Impact |
-|--------|--------|
-| **Cost-to-Serve** | Reduced 20-30% via back-office automation |
-| **Advisor Capacity** | Increased 3-5x per advisor |
-| **AUM Retention** | 15% uplift via predictive churn modeling |
-| **Revenue Growth** | 40% higher from personalized activities |
+This is not a chatbot. It's the **operating system** for the next generation of compliant, trustworthy wealth management AI.
 
 ---
 
-## 🔄 The Evolution: A Build-in-Public Journey
+## 📖 The Wealth AI Series
 
-This project tells the story of building production-grade financial AI through three phases:
+This project is the technical companion to a 5-part Substack series documenting the "build in public" journey.
 
-### Phase 1: The Math Ban
+| Part | Article | What You'll Learn |
+|:----:|---------|-------------------|
+| 1 | [**The Trust Wall**](substack_article_part1.md) | Why the GenAI Bubble burst in finance. The case for deterministic AI. |
+| 2 | [**The Cyborg Blueprint**](substack_article_part2.md) | The Math Ban. The Saga Pattern. Compliance-by-Design. |
+| 3 | [**Tax Alpha**](substack_article_part3.md) | Wash sale detection across 30+ fund families. The 5-step TLH Saga. |
+| 4 | [**The Silicon Workforce**](substack_article_part4.md) | KYA Framework: Agent Identity (DID), RBAC, and Immutable Audit Logs. |
+| 5 | [**Death of the Model Portfolio**](substack_article_part5.md) | Direct Indexing: Factor Tilts, ESG Exclusions, and "Segment of One." |
 
-> *"The LLM is never allowed to do math."*
+---
 
-We drew a hard line: LLMs parse intent; Python calculates. No exceptions.
+## ✨ Key Features
 
-| System 1: Neural Layer | System 2: Symbolic Layer |
-|------------------------|-------------------------|
-| 🧠 LLM (Gemini/GPT/Claude) | 🔢 Pure Python + Pandas |
-| Handles: Intent, language, context | Handles: All calculations |
-| Output: Structured variables | Output: Deterministic numbers |
-| *"What does the user want?"* | *"What are the exact numbers?"* |
+### 🛡️ Auditability System (Know Your Agent)
 
-If a regulator asks, "Why did the system recommend selling IBM?", we don't ask the AI to explain itself. We point to line 47 of `financial_calculator.py`. **The code *is* the explanation.**
+> *"You can't audit a vibe. If you're giving a robot a checkbook, give it a passport first."*
 
-### Phase 2: The Saga Pattern
+Every AI agent in the system is a traceable, accountable entity.
 
-> *"Think of it as a cosmic undo button—or, if you prefer gaming metaphors, a save point before every boss fight."*
-> — **The Day the Chatbot Died, Part 2**
+*   **Agent Identity (DID):** A cryptographic passport (`agent:tlh_optimizer:v1.2:a8f3`) for every agent version.
+*   **Role-Based Access Control (RBAC):** A `Research_Agent` (READ_ONLY) cannot execute trades. A `Trading_Agent` (TRADE_MEDIUM) is capped at $100k.
+*   **Immutable Audit Log:** An append-only record capturing:
+    *   **WHO:** The agent's DID.
+    *   **WHAT:** The action taken (`BUY 50 AAPL`).
+    *   **WHY:** The reasoning trace (`Portfolio drift > 5%. AAPL satisfies quality factor.`).
+*   **Validation Gates:** Deterministic, pre-execution checks (`Cash > 2%`, `No Wash Sale`) that block actions *before* they happen.
 
-Financial transactions are irreversible. A sell order hits the market, and there's no Ctrl+Z. So we borrowed from distributed systems: the **Saga Pattern**.
+```python
+# src/audit.py - The Digital Passport
+@dataclass
+class AgentIdentity:
+    agent_id: str      # "agent:rebalance_bot:v1.2:c4a2"
+    authority: AgentAuthority  # READ_ONLY, TRADE_SMALL, TRADE_MEDIUM, ADMIN
+    version: str
+    created_at: datetime
+```
 
-Every complex action is broken into atomic steps. Each step has a *compensating transaction*—an inverse operation that can undo it:
+---
 
-| Step | Forward Action | Compensating Action |
-|:-----|:---------------|:--------------------|
-| 1 | Validate market conditions | (No-op—validation is read-only) |
-| 2 | Sell overweight assets | **Buy back the assets** |
-| 3 | Settle cash | (Previous step handles it) |
-| 4 | Buy underweight assets | **🔒 PIVOT—Point of No Return** |
+### 📊 Direct Indexing Engine
 
-If any step fails before the pivot, the Saga Orchestrator automatically executes compensation in reverse order. The client ends up exactly where they started—not in some undefined limbo state.
+> *"The mutual fund was the greatest invention of the 20th century. Direct Indexing is the 21st."*
 
-### Phase 3: Tax-Loss Harvesting
+Build hyper-personalized "Segment of One" portfolios at scale.
+
+*   **Factor Tilts:** Mathematically re-weight the S&P 500 for Value, Growth, Dividend, Momentum, or Quality.
+*   **ESG Exclusions:** Deterministically filter out Tobacco, Defense, Fossil Fuels, or Gambling with a single click.
+*   **Tax-Lot Optimization:** Seamlessly integrates with the TLH engine to minimize tax impact during rebalancing.
+*   **Tracking Error Calculation:** Shows the impact of customizations vs. the benchmark.
+
+```python
+# src/direct_indexing.py - The "Segment of One"
+index = CustomIndex.create(
+    name="My ESG Growth Index",
+    benchmark=Benchmark.SP500,
+    factor_tilts=[
+        FactorTilt(factor=FactorType.GROWTH, weight=0.3),
+        FactorTilt(factor=FactorType.QUALITY, weight=0.2),
+    ],
+    exclusions=[
+        ExclusionRule(type=ExclusionType.ESG_CATEGORY, values=["tobacco", "fossil_fuels"]),
+    ],
+)
+```
+
+| Client Profile | Customization | Result |
+|----------------|---------------|--------|
+| Tech Employee | S&P 500 minus Tech (hedge job risk), +20% Value | Reduced concentration risk |
+| Climate Activist | Exclude Fossil Fuels, +30% Quality | Values-aligned portfolio |
+| Retiree | +50% Dividend Tilt, Max TLH | Optimized income stream |
+
+---
+
+### 📉 Tax-Loss Harvesting Saga
 
 > *"The best AI systems aren't smart. They're relentless."*
-> — **The Day the Chatbot Died, Part 3**
 
-A $40,000 mistake taught us the importance of **wash sale detection**. A client's advisor sold VTI at a loss, then three weeks later, their 401(k) auto-invested into ITOT. The IRS disallowed the entire loss—because VTI and ITOT are "substantially identical" even though they're different tickers from different providers.
+A 5-step transactional workflow with automatic rollback on failure.
 
-The robot doesn't get tired. It doesn't forget. It checks *every single time*.
+*   **Expanded Wash Sale Detection:** Scans 30+ fund families. Knows that `VTI` and `ITOT` are "substantially identical" even though they're different tickers.
+*   **Replacement Suggestions:** Automatically suggests safe alternatives (e.g., `VTI` → `SCHD`).
+*   **Pivot Transaction:** The "Point of No Return." Before Step 4, failures trigger automatic rollback. After Step 4, the system proceeds forward-only.
+
+```mermaid
+flowchart LR
+    S1["1️⃣ IdentifyLosses"] --> S2["2️⃣ CheckWashSale"]
+    S2 --> S3["3️⃣ SellLossPositions"]
+    S3 --> S4["4️⃣ PurchaseReplacement 🔒"]
+    S4 --> S5["5️⃣ RecordTaxLot"]
+    
+    S3 -.->|"Failure"| R2["↩️ Compensate"]
+    R2 -.-> R1["↩️ Compensate"]
+    
+    style S4 fill:#fef3c7,stroke:#f59e0b,stroke-width:3px
+```
 
 | Fund Family | Substantially Identical Tickers |
 |-------------|--------------------------------|
 | Total US Stock | VTI, ITOT, SCHB, SPTM |
 | S&P 500 | SPY, VOO, IVV, SPLG |
-| Total International | VXUS, IXUS, SPDW |
 | Total Bond Market | BND, AGG, SCHZ |
 | Gold | GLD, IAU, SGOL |
 
@@ -114,186 +148,118 @@ The robot doesn't get tired. It doesn't forget. It checks *every single time*.
 
 ## 📐 Architecture
 
-### The Neurosymbolic Stack + Transactional Saga Pattern
+The **Neurosymbolic Stack** separates "thinking" from "doing."
 
 ```mermaid
 flowchart TB
-    subgraph Neural["🧠 SYSTEM 1: Neural Layer (LLM)"]
-        A["User: 'Harvest my tax losses'"] --> B[Intent Parser]
-        B --> |"intent: tlh"| C{Route}
+    subgraph Neural["🧠 SYSTEM 1: Neural Layer"]
+        A["User: 'Harvest my losses'"] --> B[LLM Intent Parser]
+        B --> C{Router}
     end
     
-    subgraph Symbolic["🔢 SYSTEM 2: Symbolic Layer (Python)"]
-        D["Tax Analyzer<br/>28 Tax Lots • FIFO"]
-        E["Wash Sale Checker<br/>30+ Fund Families"]
+    subgraph Symbolic["🔢 SYSTEM 2: Symbolic Layer"]
+        D["Tax Analyzer\n(Pure Python)"]
+        E["Compliance Gate\n(Validation Rules)"]
         D --> E
     end
     
-    subgraph TLHSaga["📉 TAX LOSS HARVESTING SAGA"]
-        T1["1. IdentifyLosses"]
-        T2["2. CheckWashSale"]
-        T3["3. SellLossPositions"]
-        T4["4. PurchaseReplacement 🔒"]
-        T5["5. RecordTaxLot"]
-        T1 --> T2 --> T3 --> T4 --> T5
+    subgraph Saga["🔄 SAGA ORCHESTRATOR"]
+        S1[Step 1] --> S2[Step 2] --> S3[Step 3] --> S4["Step 4 🔒\n(PIVOT)"]
     end
     
-    subgraph RebalanceSaga["⚖️ REBALANCE SAGA"]
-        S1["1. ValidateMarket"]
-        S2["2. PlaceSellOrders"]
-        S3["3. SettleCash"]
-        S4["4. PlaceBuyOrders 🔒"]
-        S1 --> S2 --> S3 --> S4
-    end
-    
-    subgraph Human["✋ HUMAN-IN-THE-LOOP"]
-        F[Review Checkpoint]
-        G[Execute Saga]
+    subgraph Audit["🛡️ AUDIT STORE"]
+        Log["Immutable Log\n(WHO • WHAT • WHY)"]
     end
     
     C --> D
-    E -->|"✅ Pass"| F
-    F -->|"Approve"| G
-    G --> TLHSaga
-    G --> RebalanceSaga
+    E -->|"✅ Pass"| Saga
+    Saga -.-> Log
     
-    style Neural fill:#e8f5e9,stroke:#4caf50,stroke-width:2px
-    style Symbolic fill:#fff3e0,stroke:#ff9800,stroke-width:2px
-    style Human fill:#e3f2fd,stroke:#2196f3,stroke-width:2px
-    style TLHSaga fill:#fce4ec,stroke:#e91e63,stroke-width:2px
-    style RebalanceSaga fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
+    style Neural fill:#dcfce7,stroke:#22c55e,stroke-width:2px
+    style Symbolic fill:#fef9c3,stroke:#eab308,stroke-width:2px
+    style Saga fill:#dbeafe,stroke:#3b82f6,stroke-width:2px
+    style Audit fill:#f3f4f6,stroke:#6b7280,stroke-width:2px,stroke-dasharray: 5 5
 ```
 
-### Two Sagas, One Pattern
+### The Golden Rule
 
-| Saga | Steps | Pivot Point |
-|------|-------|-------------|
-| **Rebalance** | ValidateMarket → PlaceSellOrders → SettleCash → **PlaceBuyOrders** 🔒 | Step 4 |
-| **Tax Loss Harvesting** | IdentifyLosses → CheckWashSale → SellLossPositions → **PurchaseReplacement** 🔒 → RecordTaxLot | Step 4 |
+> ***"AI doesn't do math; it calls a calculator."***
 
-> **Pivot Transaction:** The point-of-no-return. Before it, failures trigger automatic rollback. After it, the system proceeds forward-only.
+| Layer | Role | Technology |
+|-------|------|------------|
+| **Neural (System 1)** | Parse intent, route requests, synthesize responses. | LLM (Gemini, GPT, Claude) |
+| **Symbolic (System 2)** | All calculations, tax rules, compliance logic. | Pure Python + Pandas |
+| **Saga Orchestrator** | Manage multi-step transactions with rollback. | Custom Pattern |
+| **Audit Store** | Immutable, append-only log for every action. | Custom + DID |
 
 ---
 
 ## 🚀 Quick Start
 
-### Option 1: Full SaaS Stack (Recommended)
+### Prerequisites
+*   Python 3.10+
+*   Node.js 18+
+*   A Gemini/OpenAI API Key (optional, for LLM features)
 
+### 1. Clone the Repository
 ```bash
-# Clone the repo
 git clone https://github.com/hiteshdundi01/CyborgAdvisor.git
 cd CyborgAdvisor
+```
 
-# Setup Python environment
-python -m venv venv
-venv\Scripts\activate  # Windows
-# source venv/bin/activate  # macOS/Linux
-pip install -r requirements.txt
-
-# Start the FastAPI backend
+### 2. Start the Backend (FastAPI)
+```bash
 cd backend
+python -m venv venv
+# Windows: venv\Scripts\activate
+# macOS/Linux: source venv/bin/activate
 pip install -r requirements.txt
-python -m uvicorn main:app --reload
-# API runs at http://localhost:8000
 
-# In a new terminal, start the React frontend
+python -m uvicorn main:app --reload
+# API Docs: http://localhost:8000/docs
+```
+
+### 3. Start the Frontend (React + Vite)
+```bash
 cd frontend
 npm install
 npm run dev
-# UI runs at http://localhost:5173
-```
-
-### Option 2: Streamlit Demo
-
-```bash
-# Configure API key
-cp .env.example .env
-# Edit .env: GOOGLE_API_KEY=your_key_here
-
-# Launch Streamlit
-streamlit run app.py
-```
-
-### Option 3: CLI Demo
-
-```bash
-python main.py          # Full LLM workflow
-python main.py --simple # Pure calculations, no LLM
+# Dashboard: http://localhost:5173
 ```
 
 ---
 
-## 🖥️ The React Dashboard
+## 🖥️ The Dashboard
 
-A premium dark-themed SaaS dashboard with glassmorphism design:
+A premium, dark-themed SaaS dashboard with glassmorphism design.
 
 | Page | Features |
 |------|----------|
-| 📊 **Dashboard** | Portfolio stats, allocation chart, activity feed |
-| 💼 **Portfolio Manager** | Add, edit, delete holdings with inline editing |
-| ⚖️ **Rebalance Center** | Target allocation sliders, proposed trades, saga execution |
-| 📉 **Tax Loss Harvesting** | Loss scanner, wash sale indicators, replacement suggestions |
-| 🔄 **Saga Monitor** | Execution history, step visualization, audit logs |
-
-### Design System
-
-- **Theme:** Premium dark mode with glassmorphism
-- **Colors:** Cyan (#06b6d4), Emerald (#10b981), Rose (#f43f5e), Amber (#f59e0b)
-- **Animations:** Framer Motion for smooth transitions
-- **Charts:** Recharts for data visualization
+| 📊 **Dashboard** | Portfolio overview, allocation charts, activity feed. |
+| 💼 **Portfolio Manager** | CRUD for holdings with inline editing. |
+| ⚖️ **Rebalance Center** | Target allocation sliders, proposed trades, saga execution. |
+| 📉 **Tax Loss Harvesting** | Loss scanner, wash sale indicators, 1-click harvest. |
+| 📈 **Direct Indexing** | Factor tilt sliders, ESG exclusion toggles, portfolio builder. |
+| 🛡️ **Audit Monitor** | Event timeline, reasoning traces, agent registry. |
+| 🔄 **Saga Monitor** | Execution history, step-by-step visualization. |
 
 ---
 
-## 📉 Tax-Loss Harvesting Deep Dive
+## 🔌 API Reference
 
-### The Wash Sale Trap
+All endpoints are available at `http://localhost:8000/docs` (Swagger UI).
 
-The IRS disallows losses if you buy "substantially identical" securities within 30 days. The trap? "Substantially identical" extends across fund families:
+### Core Endpoints
 
-```python
-from src.sagas.tax_loss_harvesting import is_substantially_identical
-
-is_substantially_identical("VTI", "ITOT")  # True — same fund family
-is_substantially_identical("VTI", "SPY")   # False — different index
-```
-
-### Tax Impact Calculation
-
-The system calculates estimated savings based on holding period:
-
-| Holding Period | Tax Rate | Example Loss | Savings |
-|----------------|----------|--------------|---------|
-| **Short-term** (< 1 year) | 29% (federal + state) | $1,000 | $290 |
-| **Long-term** (≥ 1 year) | 15% (capital gains) | $1,000 | $150 |
-
----
-
-## 🔧 API Reference
-
-### Tax-Loss Harvesting Endpoints
-
-```bash
-# Scan for opportunities
-curl http://localhost:8000/api/v1/tax-loss-harvest/opportunities?min_threshold=500
-
-# Check wash sale status
-curl http://localhost:8000/api/v1/tax-loss-harvest/wash-sale-check?asset=VTI
-
-# Execute TLH saga
-curl -X POST http://localhost:8000/api/v1/tax-loss-harvest/execute \
-  -H "Content-Type: application/json" \
-  -d '{"tax_lots": [...], "min_loss_threshold": 100}'
-```
-
-### Saga Status Endpoints
-
-```bash
-# Get saga status
-curl http://localhost:8000/api/v1/saga/{transaction_id}/status
-
-# Real-time updates (Server-Sent Events)
-curl http://localhost:8000/api/v1/saga/{transaction_id}/stream
-```
+| Category | Endpoint | Description |
+|----------|----------|-------------|
+| **Audit** | `GET /api/v1/audit/transactions` | Query audited transactions. |
+| **Audit** | `GET /api/v1/audit/agents` | List registered KYA agents. |
+| **TLH** | `GET /api/v1/tax-loss-harvest/opportunities` | Scan for harvestable losses. |
+| **TLH** | `POST /api/v1/tax-loss-harvest/execute` | Run the 5-step TLH Saga. |
+| **Direct Indexing** | `POST /api/v1/direct-indexing/indices` | Create a custom index. |
+| **Direct Indexing** | `POST /api/v1/direct-indexing/construct` | Build a portfolio from an index. |
+| **Saga** | `GET /api/v1/saga/{id}/stream` | Real-time saga status (SSE). |
 
 ---
 
@@ -301,46 +267,32 @@ curl http://localhost:8000/api/v1/saga/{transaction_id}/stream
 
 ```
 CyborgAdvisor/
-├── app.py                          # 🌐 Streamlit Web UI
-├── main.py                         # CLI entry point
-├── requirements.txt
-├── .env.example
+├── README.md
+├── SECURITY.md               # Vulnerability reporting policy
+├── CONTRIBUTING.md           # Contribution guidelines
+├── LICENSE.md                # MIT License
 │
-├── src/
-│   ├── config.py                   # Model configuration
-│   ├── state.py                    # AgentState (includes TLH fields)
-│   ├── graph.py                    # LangGraph state machine
-│   ├── nodes/
-│   │   ├── intent_parser.py        # System 1: LLM intent
-│   │   ├── financial_calculator.py # System 2: Rebalance math
-│   │   ├── tax_analyzer.py         # System 2: TLH calculations
-│   │   ├── compliance_check.py     # System 2: Rule validation
-│   │   └── human_review.py         # HITL + Saga trigger
+├── backend/                  # 🐍 FastAPI Backend
+│   └── main.py               # 14+ API endpoints
+│
+├── frontend/                 # ⚛️ React + Vite + TypeScript
+│   └── src/pages/            # Dashboard, TLH, DirectIndexing, Audit...
+│
+├── src/                      # 🧠 Core Logic (Neurosymbolic Engine)
+│   ├── audit.py              # KYA Framework, DID, RBAC, AuditStore
+│   ├── direct_indexing.py    # Factor Tilts, ESG, CustomIndex
 │   └── sagas/
-│       ├── core.py                 # SagaOrchestrator, TransactionStep
-│       ├── rebalance.py            # 4-step Rebalance Saga
-│       └── tax_loss_harvesting.py  # 5-step TLH Saga
+│       ├── core.py           # SagaOrchestrator, TransactionStep
+│       ├── rebalance.py      # 4-step Rebalance Saga
+│       ├── tax_loss_harvesting.py  # 5-step TLH Saga
+│       └── direct_indexing.py      # 7-step DI Saga
 │
-├── backend/                        # 🔌 FastAPI Backend
-│   ├── main.py                     # API endpoints, WebSocket, SSE
-│   └── requirements.txt
+├── tests/                    # ✅ Pytest Suite
+│   ├── test_saga_core.py
+│   └── test_tax_loss_harvesting.py
 │
-├── frontend/                       # ⚛️ React + Vite Frontend
-│   ├── src/
-│   │   ├── App.tsx                 # Router + React Query
-│   │   ├── index.css               # Premium dark theme
-│   │   ├── components/layout/      # Sidebar, navigation
-│   │   └── pages/                  # Dashboard, Portfolio, TLH, etc.
-│   └── package.json
-│
-├── tests/
-│   ├── test_saga_core.py           # Saga orchestrator tests
-│   ├── test_tax_loss_harvesting.py # TLH saga tests
-│   └── ...
-│
-└── docs/
-    ├── architecture.md             # Technical diagrams
-    └── substack_article*.md        # "The Day the Chatbot Died" series
+└── docs/                     # 📚 Documentation & Research
+    └── Deterministic AI Pivot.txt
 ```
 
 ---
@@ -348,68 +300,12 @@ CyborgAdvisor/
 ## 🧪 Testing
 
 ```bash
-# Run all tests
+# Run the full test suite
 pytest tests/ -v
 
-# Test TLH saga (no LLM required)
+# Run a specific test file
 pytest tests/test_tax_loss_harvesting.py -v
-
-# Test core saga pattern
-pytest tests/test_saga_core.py -v
 ```
-
-### What's Tested
-
-- ✅ Substantially identical detection (30+ fund family mappings)
-- ✅ FIFO loss identification
-- ✅ Tax impact calculations (short-term vs long-term)
-- ✅ Saga forward execution (all steps success)
-- ✅ Saga rollback (failure before pivot)
-- ✅ Pivot transaction (no rollback after)
-
----
-
-## 📚 The Day the Chatbot Died — Article Series
-
-This project is the technical companion to a Substack series:
-
-| Part | Title | Focus |
-|------|-------|-------|
-| **Part 1** | The Wealth Management "Trust Wall": Why the Industry is Pivoting to Deterministic AI | From Probabilistic Vibes to Architectural Logic: A 2026 Roadmap for Achieving Operational Alpha through Neurosymbolic AI.|
-| **Part 2** | Cyborg Advisor Blueprint: A Reference Architecture for AI Wealth Management | The Math Ban, Neurosymbolic Architecture, Saga Pattern. Designing for Operational Alpha: A deep dive into the code and compliance-by-design principles of the next decade's Wealthtech. |
-| **Part 3** | Coming Soon | Tax-Loss Harvesting, Wash Sale Detection, Tax Alpha |
-
----
-
-## 🎓 The Bigger Picture: The Cyborg Advisor Model
-
-> *"The fear that AI would replace the human financial advisor has been definitively dispelled. Instead, we see the rise of the 'Cyborg Advisor'—a model that bifurcates the advisory function into 'Mechanics' (AI) and 'Meaning' (Human)."*
-> — **The Deterministic AI Pivot**
-
-### AI Handles the Mechanics
-
-Tasks that are repetitive, mathematical, and rule-based:
-- **Tax-Loss Harvesting:** Continuous scanning, 50ms per 100 tax lots
-- **Smart Rebalancing:** Threshold-based drift detection
-- **Compliance & Reg BI:** Pre-screening every recommendation
-
-### Humans Handle the Meaning
-
-High-value, emotional, and strategic interactions:
-- **Behavioral Coaching:** Preventing panic selling
-- **Legacy & Estate Strategy:** Navigating family dynamics
-- **Life Planning:** Aligning wealth with values
-
-### The Result: Tax Alpha
-
-> *"The Cyborg Advisor doesn't beat the market. It beats the IRS."*
-
-| Challenge | Human Advisor | Cyborg Advisor |
-|-----------|---------------|----------------|
-| Track 100 tax lots | ⏱️ 2 hours | ⚡ 50ms |
-| Check wash sale rules | 😰 Error-prone | ✅ 100% accurate |
-| Know fund families | 📚 Study required | 🤖 30+ families mapped |
-| Execute consistently | 😴 Easy to miss | 🔄 Every single day |
 
 ---
 
@@ -418,21 +314,46 @@ High-value, emotional, and strategic interactions:
 - [x] **Phase 1:** Neurosymbolic Architecture (The Math Ban)
 - [x] **Phase 2:** Saga Pattern (Transactional Integrity)
 - [x] **Phase 3:** Tax-Loss Harvesting (Wash Sale Detection)
-- [ ] **Phase 4:** Household-Level Optimization
-- [ ] **Phase 5:** Direct Indexing at Scale
+- [x] **Phase 4:** Auditability System (KYA, DID, RBAC)
+- [x] **Phase 5:** Direct Indexing at Scale
+- [ ] **Phase 6:** Household-Level Optimization
+- [ ] **Phase 7:** Multi-Custodian Support
+
+---
+
+## 🤝 Contributing
+
+We welcome contributions! Please see [**CONTRIBUTING.md**](CONTRIBUTING.md).
+
+1.  Fork the Project
+2.  Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3.  Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4.  Push to the Branch (`git push origin feature/AmazingFeature`)
+5.  Open a Pull Request
+
+---
+
+## 🔒 Security
+
+Please read our [**Security Policy**](SECURITY.md) for reporting vulnerabilities.
 
 ---
 
 <div align="center">
 
-### **The Art of the Possible**
+---
 
-*LLMs for language. Python for math. Sagas for transactions. Humans for judgment.*
+### The Art of the Possible
+
+*The first-generation chatbots hit the Trust Wall because they tried to **substitute** for human judgment.*  
+*The Cyborg Advisor succeeds because it **amplifies** human judgment.*
+
+**The chatbot is dead. Long live the Cyborg.**
 
 ---
 
-**Built with** 🧠 LangGraph • ⚛️ React • 🐍 FastAPI • 🤖 Google Gemini • 📊 Recharts
+**Built with** 🧠 LangGraph · ⚛️ React · 🐍 FastAPI · 🤖 Google Gemini · 📊 Recharts
 
-**License:** MIT
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
 
 </div>
