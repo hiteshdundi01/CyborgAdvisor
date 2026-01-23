@@ -6,7 +6,9 @@ import {
     TrendingDown,
     Activity,
     Settings,
-    HelpCircle
+    HelpCircle,
+    Shield,
+    Sliders
 } from 'lucide-react'
 
 const navigation = [
@@ -14,7 +16,9 @@ const navigation = [
     { name: 'Portfolio', href: '/portfolio', icon: Briefcase },
     { name: 'Rebalance', href: '/rebalance', icon: RefreshCw },
     { name: 'Tax Loss Harvesting', href: '/tax-loss-harvesting', icon: TrendingDown },
+    { name: 'Direct Indexing', href: '/direct-indexing', icon: Sliders },
     { name: 'Saga Monitor', href: '/saga-monitor', icon: Activity },
+    { name: 'Audit Monitor', href: '/audit', icon: Shield },
 ]
 
 export default function Layout() {

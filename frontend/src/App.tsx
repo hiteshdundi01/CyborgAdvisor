@@ -6,6 +6,8 @@ import PortfolioManager from './pages/PortfolioManager'
 import RebalanceCenter from './pages/RebalanceCenter'
 import TaxLossHarvesting from './pages/TaxLossHarvesting'
 import SagaMonitor from './pages/SagaMonitor'
+import AuditMonitor from './pages/AuditMonitor'
+import DirectIndexing from './pages/DirectIndexing'
 import './index.css'
 
 const queryClient = new QueryClient({
@@ -28,6 +30,8 @@ function App() {
             <Route path="rebalance" element={<RebalanceCenter />} />
             <Route path="tax-loss-harvesting" element={<TaxLossHarvesting />} />
             <Route path="saga-monitor" element={<SagaMonitor />} />
+            <Route path="audit" element={<AuditMonitor />} />
+            <Route path="direct-indexing" element={<DirectIndexing />} />
           </Route>
         </Routes>
       </BrowserRouter>

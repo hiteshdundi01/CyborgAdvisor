@@ -667,6 +667,224 @@ async def get_agent(agent_id: str):
     
     return agent.to_dict()
 
+# =============================================================================
+# Direct Indexing API Endpoints
+# =============================================================================
+
+class FactorTiltRequest(BaseModel):
+    factor: str  # value, growth, dividend, momentum, quality
+    weight: float  # -1.0 to 1.0
+
+
+class ExclusionRequest(BaseModel):
+    exclusion_type: str  # sector, ticker, esg_category
+    values: list[str]
+    reason: str = ""
+
+
+class CreateIndexRequest(BaseModel):
+    name: str
+    benchmark: str = "sp500"
+    factor_tilts: list[FactorTiltRequest] = []
+    exclusions: list[ExclusionRequest] = []
+    num_holdings: int = 100
+    tax_lot_optimization: bool = True
+
+
+class ConstructPortfolioRequest(BaseModel):
+    index_id: str
+    investment_amount: float
+    current_holdings: dict = {}
+
+
+@app.post("/api/v1/direct-indexing/indices")
+async def create_custom_index(request: CreateIndexRequest):
+    """
+    Create a new custom index configuration.
+    """
+    from src.direct_indexing import (
+        CustomIndex, Benchmark, FactorTilt, FactorType,
+        ExclusionRule, ExclusionType, get_global_engine
+    )
+    
+    engine = get_global_engine()
+    
+    # Convert factor tilts
+    tilts = []
+    for t in request.factor_tilts:
+        try:
+            tilts.append(FactorTilt(
+                factor=FactorType(t.factor),
+                weight=t.weight
+            ))
+        except ValueError:
+            raise HTTPException(status_code=400, detail=f"Invalid factor type: {t.factor}")
+    
+    # Convert exclusions
+    exclusions = []
+    for e in request.exclusions:
+        try:
+            exclusions.append(ExclusionRule(
+                exclusion_type=ExclusionType(e.exclusion_type),
+                values=e.values,
+                reason=e.reason
+            ))
+        except ValueError:
+            raise HTTPException(status_code=400, detail=f"Invalid exclusion type: {e.exclusion_type}")
+    
+    # Create index
+    try:
+        benchmark = Benchmark(request.benchmark)
+    except ValueError:
+        raise HTTPException(status_code=400, detail=f"Invalid benchmark: {request.benchmark}")
+    
+    index = CustomIndex.create(
+        name=request.name,
+        benchmark=benchmark,
+        factor_tilts=tilts,
+        exclusions=exclusions,
+        num_holdings=request.num_holdings,
+        tax_lot_optimization=request.tax_lot_optimization,
+    )
+    
+    engine.register_index(index)
+    
+    return {
+        "success": True,
+        "index": index.to_dict(),
+    }
+
+
+@app.get("/api/v1/direct-indexing/indices")
+async def list_indices():
+    """
+    List all custom indices.
+    """
+    from src.direct_indexing import get_global_engine
+    
+    engine = get_global_engine()
+    indices = engine.list_indices()
+    
+    return {
+        "indices": [i.to_dict() for i in indices],
+        "total": len(indices),
+    }
+
+
+@app.get("/api/v1/direct-indexing/indices/{index_id}")
+async def get_index(index_id: str):
+    """
+    Get a custom index by ID.
+    """
+    from src.direct_indexing import get_global_engine
+    
+    engine = get_global_engine()
+    index = engine.get_index(index_id)
+    
+    if not index:
+        raise HTTPException(status_code=404, detail="Index not found")
+    
+    return index.to_dict()
+
+
+@app.post("/api/v1/direct-indexing/construct")
+async def construct_portfolio(request: ConstructPortfolioRequest):
+    """
+    Construct a portfolio based on a custom index.
+    """
+    from src.direct_indexing import get_global_engine
+    
+    engine = get_global_engine()
+    index = engine.get_index(request.index_id)
+    
+    if not index:
+        raise HTTPException(status_code=404, detail="Index not found")
+    
+    portfolio = engine.construct_portfolio(
+        index=index,
+        investment_amount=request.investment_amount,
+    )
+    
+    return {
+        "success": True,
+        "portfolio": portfolio.to_dict(),
+    }
+
+
+@app.post("/api/v1/direct-indexing/execute")
+async def execute_direct_indexing(request: ConstructPortfolioRequest):
+    """
+    Execute direct indexing saga for portfolio construction.
+    """
+    from src.direct_indexing import get_global_engine
+    from src.sagas.direct_indexing import run_direct_indexing
+    
+    engine = get_global_engine()
+    index = engine.get_index(request.index_id)
+    
+    if not index:
+        raise HTTPException(status_code=404, detail="Index not found")
+    
+    # Execute saga
+    result = run_direct_indexing(
+        index=index,
+        investment_amount=request.investment_amount,
+        current_holdings=request.current_holdings,
+    )
+    
+    return {
+        "success": result.get("error") is None,
+        "transaction_id": result.get("transaction_id"),
+        "status": "completed" if not result.get("error") else "failed",
+        "trades_executed": len(result.get("executed_trades", [])),
+        "final_positions": result.get("final_positions", {}),
+        "logs": result.get("logs", []),
+        "error": result.get("error"),
+    }
+
+
+@app.get("/api/v1/direct-indexing/factors")
+async def get_available_factors():
+    """
+    Get available factor types for tilting.
+    """
+    from src.direct_indexing import FactorType
+    
+    return {
+        "factors": [
+            {"id": f.value, "name": f.name, "description": _get_factor_description(f)}
+            for f in FactorType
+        ]
+    }
+
+
+def _get_factor_description(factor) -> str:
+    """Get human-readable description for a factor."""
+    descriptions = {
+        "value": "Low P/E, P/B ratio stocks (undervalued)",
+        "growth": "High revenue and earnings growth companies",
+        "dividend": "High dividend yield stocks",
+        "momentum": "Stocks with positive price momentum",
+        "quality": "High ROE, low debt, stable earnings",
+        "size": "Small capitalization companies",
+        "volatility": "Low volatility stocks",
+    }
+    return descriptions.get(factor.value, "")
+
+
+@app.get("/api/v1/direct-indexing/exclusions")
+async def get_exclusion_categories():
+    """
+    Get available ESG exclusion categories.
+    """
+    from src.direct_indexing import ESG_EXCLUSIONS, ExclusionType
+    
+    return {
+        "exclusion_types": [e.value for e in ExclusionType],
+        "esg_categories": list(ESG_EXCLUSIONS.keys()),
+        "esg_details": {k: {"count": len(v), "tickers": v} for k, v in ESG_EXCLUSIONS.items()},
+    }
+
 
 # =============================================================================
 # Health Check
